@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 
 namespace SpeedTestLogger
@@ -11,6 +12,7 @@ namespace SpeedTestLogger
         public readonly int LoggerId;
         public readonly RegionInfo LoggerLocation;
         public readonly Uri ApiUrl;
+        public readonly ServiceBusConfiguration ServiceBus;
 
         public LoggerConfiguration()
         {
@@ -29,6 +31,22 @@ namespace SpeedTestLogger
             LoggerId = int.Parse(configuration["loggerId"]);
             ApiUrl = new Uri(configuration["speedTestApiUrl"]);
             Console.WriteLine($"API URL: {ApiUrl.AbsoluteUri}");
+
+            ServiceBus = new ServiceBusConfiguration(configuration);
+        }
+
+        public class ServiceBusConfiguration
+        {
+            public readonly string ConnectionString;
+            public readonly string TopicName;
+            public readonly string SubscriptionName;
+
+            public ServiceBusConfiguration(IConfigurationRoot configuration)
+            {
+                ConnectionString = configuration["serviceBus:connectionString"];
+                TopicName = configuration["serviceBus:topicName"];
+                SubscriptionName = configuration["serviceBus:subscriptionName"];
+            }
         }
     }
 }
