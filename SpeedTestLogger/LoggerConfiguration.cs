@@ -16,7 +16,8 @@ namespace SpeedTestLogger
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json");
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.Development.json", true);
 
             var configuration = builder.Build();
 
@@ -27,6 +28,7 @@ namespace SpeedTestLogger
             UserId = configuration["userId"];
             LoggerId = int.Parse(configuration["loggerId"]);
             ApiUrl = new Uri(configuration["speedTestApiUrl"]);
+            Console.WriteLine($"API URL: {ApiUrl.AbsoluteUri}");
         }
     }
 }
