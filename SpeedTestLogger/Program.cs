@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Globalization;
+using System.Threading.Tasks;
 using SpeedTestLogger.Models;
 
 namespace SpeedTestLogger
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Console.WriteLine("Hello SpeedTestLogger!");
 
@@ -21,6 +21,14 @@ namespace SpeedTestLogger
                 Timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
                 Data = testData
             };
+
+            var success = false;
+            using (var client = new SpeedTestApiClient(config.ApiUrl))
+            {
+                success = await client.PublishTestResult(results);
+            }
+
+            Console.WriteLine($"SpeedTest {(success == true ? "complete" : "failed")}!");
         }
     }
 }
